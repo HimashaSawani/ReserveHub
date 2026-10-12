@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum ResourceType {
+  MEETING_ROOM
+  EQUIPMENT
+  OTHER
+}
+
+enum ReservationStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(uuid()) @db.Uuid
+  name         String
+  email        String        @unique
+  passwordHash String
+  role         Role          @default(MEMBER)
+  reservations Reservation[]
+  createdAt    DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime      @updatedAt @db.Timestamptz(3)
+}
+
+model Resource {
+  id           String        @id @default(uuid()) @db.Uuid
+  name         String
+  type         ResourceType
+  location     String
+  capacity     Int?
+  description  String?
+  isActive     Boolean       @default(true)
+  reservations Reservation[]
+  createdAt    DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime      @updatedAt @db.Timestamptz(3)
+
+  @@index([isActive, type])
+}
+
+model Reservation {
+  id         String            @id @default(uuid()) @db.Uuid
+  userId     String            @db.Uuid
+  resourceId String            @db.Uuid
+  startAt    DateTime          @db.Timestamptz(3)
+  endAt      DateTime          @db.Timestamptz(3)
+  purpose    String
+  status     ReservationStatus @default(CONFIRMED)
+  createdAt  DateTime          @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime          @updatedAt @db.Timestamptz(3)
+  user       User              @relation(fields: [userId], references: [id], onDelete: Restrict)
+  resource   Resource          @relation(fields: [resourceId], references: [id], onDelete: Restrict)
+
+  @@index([userId, startAt])
+  @@index([resourceId, status, startAt])
+}
