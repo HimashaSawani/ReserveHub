@@ -1,10 +1,9 @@
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/current-user";
 import { formatColombo } from "@/lib/time";
-import SubmitButton from "@/components/submit-button";
-import ThemeToggle from "@/components/theme-toggle";
-import { cancelReservation } from "./actions";
+import Navbar from "@/components/navbar";
+import ReservationList, { type ReservationItem } from "./reservation-list";
+import { CheckCircle2 } from "lucide-react";
 
 type Props = {
   searchParams: Promise<{
@@ -27,7 +26,7 @@ export default async function ReservationsPage({ searchParams }: Props) {
 
   const pageSize = 10;
 
-  const [total, reservations] = await Promise.all([
+  const [total, reservationsRaw] = await Promise.all([
     prisma.reservation.count({
       where: { userId: user.id },
     }),
@@ -46,112 +45,84 @@ export default async function ReservationsPage({ searchParams }: Props) {
 
   const now = new Date();
 
+  const reservations: ReservationItem[] = reservationsRaw.map((res) => {
+    const canCancel = res.status === "CONFIRMED" && res.startAt > now;
+    const stateLabel =
+      res.status === "CANCELLED"
+        ? "Cancelled"
+        : res.endAt <= now
+          ? "Completed"
+          : res.startAt <= now
+            ? "In progress"
+            : "Upcoming";
+
+    // Day number and Month in Colombo
+    const dayNumber = formatColombo(res.startAt, { day: "numeric" });
+    const monthShort = formatColombo(res.startAt, { month: "short" });
+    const formattedTime = `${formatColombo(res.startAt, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    })} · ${formatColombo(res.startAt, {
+      hour: "2-digit",
+      minute: "2-digit",
+    })} – ${formatColombo(res.endAt, {
+      hour: "2-digit",
+      minute: "2-digit",
+    })} (Asia/Colombo)`;
+
+    return {
+      id: res.id,
+      startAt: res.startAt.toISOString(),
+      endAt: res.endAt.toISOString(),
+      purpose: res.purpose,
+      status: res.status,
+      resource: res.resource,
+      formattedTime,
+      dayNumber,
+      monthShort,
+      canCancel,
+      stateLabel,
+    };
+  });
+
   return (
-    <main className="min-h-screen bg-slate-100 p-4 text-slate-900 transition-colors sm:p-6 dark:bg-slate-950 dark:text-slate-100">
-      <div className="mx-auto max-w-5xl">
-        <div className="flex items-center justify-between">
-          <Link href="/dashboard" className="font-medium text-indigo-600 transition hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
-            ← Dashboard
-          </Link>
-          <ThemeToggle />
+    <div className="min-h-screen bg-[#f8f7f2] text-slate-900 transition-colors dark:bg-[#061916] dark:text-slate-100">
+      <Navbar user={user} currentPath="reservations" />
+
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        {/* Title and Subtitle */}
+        <div className="mb-6">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+            My reservations
+          </h1>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            {total} booking{total === 1 ? "" : "s"} · All times in Sri Lanka time — Asia/Colombo
+          </p>
         </div>
 
-        <h1 className="mt-5 text-3xl font-bold">My reservations</h1>
-        <p className="mt-2 text-slate-600 dark:text-slate-400">
-          All times are shown in Sri Lanka time.
-        </p>
-
+        {/* Notice Alert Banner matching Image 1 */}
         {typeof query.notice === "string" && (
-          <p
+          <div
             role="status"
-            className="mt-5 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-indigo-800 dark:border-indigo-900/60 dark:bg-indigo-950/60 dark:text-indigo-300"
+            className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-[#edf7f0] p-4 text-xs sm:text-sm font-medium text-emerald-900 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
           >
-            {query.notice.slice(0, 200)}
-          </p>
+            <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <span>
+              {query.notice.toLowerCase().includes("cancelled")
+                ? "Reservation cancelled. The time slot is free again. It remains below in history."
+                : query.notice}
+            </span>
+          </div>
         )}
 
-        <div className="mt-6 space-y-4">
-          {reservations.length === 0 && (
-            <div className="rh-card">
-              <p>No reservations on this page.</p>
-              <Link href="/dashboard" className="rh-button mt-4">
-                Browse resources
-              </Link>
-            </div>
-          )}
-
-          {reservations.map((reservation) => {
-            const canCancel =
-              reservation.status === "CONFIRMED" &&
-              reservation.startAt > now;
-
-            const label =
-              reservation.status === "CANCELLED"
-                ? "Cancelled"
-                : reservation.endAt <= now
-                  ? "Completed"
-                  : reservation.startAt <= now
-                    ? "In progress"
-                    : "Upcoming";
-
-            return (
-              <article key={reservation.id} className="rh-card">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <Link
-                      href={`/resources/${reservation.resourceId}`}
-                      className="text-xl font-semibold text-indigo-700 transition hover:underline dark:text-indigo-400"
-                    >
-                      {reservation.resource.name}
-                    </Link>
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-                      {reservation.resource.location}
-                    </p>
-                  </div>
-
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium dark:bg-slate-800 dark:text-slate-300">
-                    {label}
-                  </span>
-                </div>
-
-                <p className="mt-4 font-medium">
-                  {formatColombo(reservation.startAt)} →{" "}
-                  {formatColombo(reservation.endAt)}
-                </p>
-
-                <p className="mt-2 break-words text-slate-600 dark:text-slate-400">
-                  {reservation.purpose}
-                </p>
-
-                {canCancel && (
-                  <form action={cancelReservation} className="mt-4">
-                    <input
-                      type="hidden"
-                      name="reservationId"
-                      value={reservation.id}
-                    />
-                    <SubmitButton>Cancel reservation</SubmitButton>
-                  </form>
-                )}
-              </article>
-            );
-          })}
-        </div>
-
-        <nav aria-label="Pagination" className="mt-6 flex items-center gap-4">
-          {page > 1 && (
-            <Link href={`/reservations?page=${page - 1}`} className="font-medium text-indigo-600 hover:underline dark:text-indigo-400">
-              ← Previous
-            </Link>
-          )}
-          <span className="text-sm text-slate-600 dark:text-slate-400">Page {page}</span>
-          {page * pageSize < total && (
-            <Link href={`/reservations?page=${page + 1}`} className="font-medium text-indigo-600 hover:underline dark:text-indigo-400">
-              Next →
-            </Link>
-          )}
-        </nav>
-      </div>
-    </main>
+        <ReservationList
+          reservations={reservations}
+          total={total}
+          page={page}
+          pageSize={pageSize}
+        />
+      </main>
+    </div>
   );
 }
