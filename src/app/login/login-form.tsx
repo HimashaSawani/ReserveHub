@@ -3,37 +3,46 @@
 import { useState, type FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 
 export default function LoginForm() {
   const router = useRouter();
+  const [email, setEmail] = useState("nadeesha@reservehub.lk");
+  const [password, setPassword] = useState("ReserveHub123!");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
     setError("");
     setPending(true);
 
     try {
       const result = await signIn("credentials", {
-        email: String(formData.get("email") ?? ""),
-        password: String(formData.get("password") ?? ""),
+        email,
+        password,
         redirect: false,
       });
 
       if (!result || result.error) {
-        setError("Unable to sign in. Check your email and password.");
+        setError("Invalid email or password. Check your credentials and try again. 3 attempts remaining.");
         return;
       }
 
       router.replace("/dashboard");
       router.refresh();
     } catch {
-      setError("Unable to sign in right now. Please try again.");
+      setError("Cannot reach the server. Your details are saved locally. Retry when online.");
     } finally {
       setPending(false);
     }
+  }
+
+  function fillCredentials(fillEmail: string) {
+    setEmail(fillEmail);
+    setPassword("ReserveHub123!");
+    setError("");
   }
 
   return (
@@ -41,7 +50,7 @@ export default function LoginForm() {
       <div>
         <label
           htmlFor="email"
-          className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300"
+          className="mb-1.5 block text-xs font-semibold text-slate-700 dark:text-slate-300"
         >
           Email address
         </label>
@@ -52,43 +61,100 @@ export default function LoginForm() {
           autoComplete="username"
           required
           disabled={pending}
-          placeholder="member@reservehub.local"
-          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-indigo-950"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="nadeesha@reservehub.lk"
+          className="w-full rounded-xl border border-[#d6d4cb] bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#0a3832] focus:ring-2 focus:ring-[#0a3832]/20 dark:border-[#1a423b] dark:bg-[#0c2621] dark:text-slate-100 dark:focus:border-emerald-400"
         />
       </div>
 
       <div>
         <label
           htmlFor="password"
-          className="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300"
+          className="mb-1.5 block text-xs font-semibold text-slate-700 dark:text-slate-300"
         >
           Password
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          maxLength={128}
-          disabled={pending}
-          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-indigo-950"
-        />
+        <div className="relative">
+          <input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            required
+            maxLength={128}
+            disabled={pending}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full rounded-xl border border-[#d6d4cb] bg-white px-4 py-3 pr-11 text-sm text-slate-900 outline-none transition focus:border-[#0a3832] focus:ring-2 focus:ring-[#0a3832]/20 dark:border-[#1a423b] dark:bg-[#0c2621] dark:text-slate-100 dark:focus:border-emerald-400"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        </div>
       </div>
-
-      {error && (
-        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/60 dark:text-red-300">
-          {error}
-        </p>
-      )}
 
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-xl bg-indigo-600 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0a3832] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#0d463e] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#0e4840] dark:hover:bg-[#12584e]"
       >
-        {pending ? "Signing in..." : "Sign in"}
+        {pending ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Signing in...</span>
+          </>
+        ) : (
+          "Sign in"
+        )}
       </button>
+
+      {/* Demo Credentials & Quick Switch */}
+      <div className="flex flex-wrap items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1">
+        <div className="flex items-center gap-1">
+          <span>Demo:</span>
+          <button
+            type="button"
+            onClick={() => fillCredentials("member@reservehub.local")}
+            className="text-[#0a3832] dark:text-emerald-400 font-medium hover:underline"
+          >
+            member
+          </button>
+          <span>/</span>
+          <button
+            type="button"
+            onClick={() => fillCredentials("admin@reservehub.local")}
+            className="text-[#0a3832] dark:text-emerald-400 font-medium hover:underline"
+          >
+            admin
+          </button>
+        </div>
+        <button
+          type="button"
+          onClick={() => alert("Password for demo accounts is ReserveHub123!")}
+          className="text-[#0a3832] dark:text-emerald-400 font-medium hover:underline"
+        >
+          Forgot password?
+        </button>
+      </div>
+
+      {/* Error Alert Box matching design */}
+      {error && (
+        <div
+          role="alert"
+          className="flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 p-3.5 text-xs text-rose-800 dark:border-rose-900/60 dark:bg-rose-950/50 dark:text-rose-200"
+        >
+          <AlertCircle className="h-4 w-4 shrink-0 text-rose-600 dark:text-rose-400 mt-0.5" />
+          <div className="flex-1">
+            <span className="font-semibold block">{error}</span>
+          </div>
+        </div>
+      )}
     </form>
   );
 }
