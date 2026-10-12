@@ -26,7 +26,7 @@ export default async function AdminResourcesPage({ searchParams }: Props) {
     <div className="min-h-screen bg-[#f8f7f2] text-slate-900 transition-colors dark:bg-[#061916] dark:text-slate-100">
       <Navbar user={user} currentPath="admin" />
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <AdminClient resources={resources} notice={notice} />
       </main>
     </div>

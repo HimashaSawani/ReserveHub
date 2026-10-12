@@ -64,13 +64,13 @@ export async function saveResource(formData: FormData) {
     }
   } catch (error) {
     console.error("Resource save failed:", error);
-    returnToAdmin("Unable to save resource.");
+    returnToAdmin("Unable to save. Please try again.");
   }
 
   revalidatePath("/dashboard");
   revalidatePath("/admin/resources");
   revalidatePath("/resources", "layout");
-  returnToAdmin("Resource saved.");
+  returnToAdmin("Resource saved successfully.");
 }
 
 export async function setResourceActive(formData: FormData) {

@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/current-user";
-import { formatColombo } from "@/lib/time";
 import Navbar from "@/components/navbar";
 import ReservationList, { type ReservationItem } from "./reservation-list";
 import { CheckCircle2 } from "lucide-react";
@@ -11,6 +10,15 @@ type Props = {
     notice?: string | string[];
   }>;
 };
+
+function formatSlotTime(date: Date): string {
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "Asia/Colombo",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(date);
+}
 
 export default async function ReservationsPage({ searchParams }: Props) {
   const user = await requireUser();
@@ -56,20 +64,25 @@ export default async function ReservationsPage({ searchParams }: Props) {
             ? "In progress"
             : "Upcoming";
 
-    // Day number and Month in Colombo
-    const dayNumber = formatColombo(res.startAt, { day: "numeric" });
-    const monthShort = formatColombo(res.startAt, { month: "short" });
-    const formattedTime = `${formatColombo(res.startAt, {
-      weekday: "short",
+    // Date tile must strictly match each booking's actual date in Asia/Colombo
+    const dayNumber = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Colombo",
       day: "numeric",
+    }).format(res.startAt);
+
+    const monthShort = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Colombo",
       month: "short",
-    })} · ${formatColombo(res.startAt, {
-      hour: "2-digit",
-      minute: "2-digit",
-    })} – ${formatColombo(res.endAt, {
-      hour: "2-digit",
-      minute: "2-digit",
-    })} (Asia/Colombo)`;
+    }).format(res.startAt);
+
+    const weekday = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Asia/Colombo",
+      weekday: "short",
+    }).format(res.startAt);
+
+    const startTime = formatSlotTime(res.startAt);
+    const endTime = formatSlotTime(res.endAt);
+    const formattedTime = `${weekday}, ${dayNumber} ${monthShort} · ${startTime} – ${endTime} (UTC+05:30)`;
 
     return {
       id: res.id,
@@ -90,27 +103,27 @@ export default async function ReservationsPage({ searchParams }: Props) {
     <div className="min-h-screen bg-[#f8f7f2] text-slate-900 transition-colors dark:bg-[#061916] dark:text-slate-100">
       <Navbar user={user} currentPath="reservations" />
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         {/* Title and Subtitle */}
         <div className="mb-6">
-          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
             My reservations
           </h1>
-          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-            {total} booking{total === 1 ? "" : "s"} · All times in Sri Lanka time — Asia/Colombo
+          <p className="mt-1 text-[15px] text-slate-600 dark:text-slate-300">
+            {total} {total === 1 ? "booking" : "bookings"} · All times shown are in Sri Lanka time (UTC+05:30).
           </p>
         </div>
 
-        {/* Notice Alert Banner matching Image 1 */}
+        {/* Separate Notice State: only rendered when a notice parameter is present */}
         {typeof query.notice === "string" && (
           <div
             role="status"
-            className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-[#edf7f0] p-4 text-xs sm:text-sm font-medium text-emerald-900 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
+            className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-[#edf7f0] p-4 text-sm font-medium text-emerald-900 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200"
           >
             <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600 dark:text-emerald-400" />
             <span>
               {query.notice.toLowerCase().includes("cancelled")
-                ? "Reservation cancelled. The time slot is free again. It remains below in history."
+                ? "Reservation cancelled. The time slot is now available for other bookings."
                 : query.notice}
             </span>
           </div>

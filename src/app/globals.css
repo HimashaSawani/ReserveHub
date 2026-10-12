@@ -15,27 +15,49 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
   min-height: 100vh;
 }
 
-/* Custom form inputs matching screenshot */
+/* Base typography helpers */
+h1, .rh-title {
+  font-size: 1.875rem; /* 30px */
+  line-height: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h2, .rh-heading {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+h3, .rh-resource-name {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+
+/* Custom form inputs matching 15-16px / 400 */
 .rh-input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.625rem 0.875rem;
   border: 1px solid #d6d4cb;
   border-radius: 0.75rem;
   background: #ffffff;
   color: #111827;
-  font-size: 0.95rem;
+  font-size: 0.9375rem; /* 15px */
+  font-weight: 400;
+  line-height: 1.375rem;
   transition: all 0.15s ease-in-out;
 }
 
@@ -56,18 +78,20 @@ body {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
-/* Custom button styles */
+/* Custom button styles: 14-15px / 500, height 40px */
 .rh-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.65rem 1.25rem;
+  height: 2.5rem; /* 40px */
+  padding: 0 1rem;
   border-radius: 0.75rem;
   background: #0a3832;
   color: #ffffff;
-  font-weight: 600;
-  font-size: 0.925rem;
+  font-weight: 500;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.25rem;
   transition: all 0.15s ease-in-out;
 }
 
