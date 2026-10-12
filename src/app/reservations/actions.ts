@@ -68,6 +68,7 @@ export async function createReservation(
   revalidatePath("/dashboard");
   revalidatePath(`/resources/${parsed.data.resourceId}`);
   revalidatePath("/reservations");
+  revalidatePath("/admin/reservations");
   redirect("/reservations?notice=Booking%20confirmed");
 }
 
@@ -101,6 +102,7 @@ export async function cancelReservation(formData: FormData) {
   }
 
   revalidatePath("/reservations");
+  revalidatePath("/admin/reservations");
   revalidatePath("/resources", "layout");
   redirect(
     count

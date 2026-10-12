@@ -64,4 +64,6 @@ model Reservation {
 
   @@index([userId, startAt])
   @@index([resourceId, status, startAt])
+  @@index([status, startAt])
+  @@index([startAt, endAt])
 }

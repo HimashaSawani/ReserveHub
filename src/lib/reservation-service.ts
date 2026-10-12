@@ -98,8 +98,12 @@ export async function reserveResource(
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2010" &&
-      String(error.meta?.code) === "23P01"
+      (error.code === "P2034" ||
+        error.code === "P2002" ||
+        (error.code === "P2010" &&
+          (String(error.meta?.code) === "23P01" ||
+            String(error.meta?.code) === "40P01" ||
+            String(error.meta?.code) === "40001")))
     ) {
       throw new BookingError(
         "This time slot was just reserved. Please choose another time.",

@@ -8,7 +8,7 @@ interface NavbarProps {
     email?: string | null;
     role: "ADMIN" | "MEMBER";
   };
-  currentPath: "dashboard" | "reservations" | "admin" | "resources";
+  currentPath: "dashboard" | "reservations" | "admin" | "admin-reservations" | "resources";
 }
 
 function getInitials(name?: string | null): string {
@@ -65,16 +65,28 @@ export default function Navbar({ user, currentPath }: NavbarProps) {
             My reservations
           </Link>
           {user.role === "ADMIN" && (
-            <Link
-              href="/admin/resources"
-              className={
-                currentPath === "admin"
-                  ? "rounded-full bg-white px-4 py-1.5 text-sm font-medium text-[#0a3832] shadow-sm transition"
-                  : "rounded-full px-4 py-1.5 text-sm font-medium text-emerald-100/90 transition hover:bg-emerald-900/50 hover:text-white"
-              }
-            >
-              Manage resources
-            </Link>
+            <>
+              <Link
+                href="/admin/resources"
+                className={
+                  currentPath === "admin"
+                    ? "rounded-full bg-white px-4 py-1.5 text-sm font-medium text-[#0a3832] shadow-sm transition"
+                    : "rounded-full px-4 py-1.5 text-sm font-medium text-emerald-100/90 transition hover:bg-emerald-900/50 hover:text-white"
+                }
+              >
+                Manage resources
+              </Link>
+              <Link
+                href="/admin/reservations"
+                className={
+                  currentPath === "admin-reservations"
+                    ? "rounded-full bg-white px-4 py-1.5 text-sm font-medium text-[#0a3832] shadow-sm transition"
+                    : "rounded-full px-4 py-1.5 text-sm font-medium text-emerald-100/90 transition hover:bg-emerald-900/50 hover:text-white"
+                }
+              >
+                All reservations
+              </Link>
+            </>
           )}
         </nav>
 
