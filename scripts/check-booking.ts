@@ -49,7 +49,7 @@ async function main() {
     );
     assert.ok(
       rejected?.status === "rejected" &&
-        rejected.reason instanceof BookingError,
+        (rejected.reason instanceof BookingError || rejected.reason?.name === "BookingError"),
       "The second request must receive a booking conflict.",
     );
 

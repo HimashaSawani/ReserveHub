@@ -4,6 +4,7 @@ import type { Resource } from "@prisma/client";
 import { requireUser } from "@/lib/current-user";
 import { prisma } from "@/lib/prisma";
 import SubmitButton from "@/components/submit-button";
+import ThemeToggle from "@/components/theme-toggle";
 import { saveResource, setResourceActive } from "./actions";
 
 function ResourceFields({ resource }: { resource?: Resource }) {
@@ -12,7 +13,7 @@ function ResourceFields({ resource }: { resource?: Resource }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       <div>
-        <label htmlFor={`${prefix}-name`} className="mb-2 block text-sm">
+        <label htmlFor={`${prefix}-name`} className="mb-2 block text-sm font-medium">
           Name
         </label>
         <input
@@ -27,7 +28,7 @@ function ResourceFields({ resource }: { resource?: Resource }) {
       </div>
 
       <div>
-        <label htmlFor={`${prefix}-type`} className="mb-2 block text-sm">
+        <label htmlFor={`${prefix}-type`} className="mb-2 block text-sm font-medium">
           Type
         </label>
         <select
@@ -45,7 +46,7 @@ function ResourceFields({ resource }: { resource?: Resource }) {
       <div>
         <label
           htmlFor={`${prefix}-location`}
-          className="mb-2 block text-sm"
+          className="mb-2 block text-sm font-medium"
         >
           Location
         </label>
@@ -63,7 +64,7 @@ function ResourceFields({ resource }: { resource?: Resource }) {
       <div>
         <label
           htmlFor={`${prefix}-capacity`}
-          className="mb-2 block text-sm"
+          className="mb-2 block text-sm font-medium"
         >
           Capacity — optional
         </label>
@@ -82,7 +83,7 @@ function ResourceFields({ resource }: { resource?: Resource }) {
       <div className="sm:col-span-2">
         <label
           htmlFor={`${prefix}-description`}
-          className="mb-2 block text-sm"
+          className="mb-2 block text-sm font-medium"
         >
           Description
         </label>
@@ -115,18 +116,21 @@ export default async function AdminResourcesPage({ searchParams }: Props) {
   });
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 text-slate-900 sm:p-6">
+    <main className="min-h-screen bg-slate-100 p-4 text-slate-900 transition-colors sm:p-6 dark:bg-slate-950 dark:text-slate-100">
       <div className="mx-auto max-w-5xl">
-        <Link href="/dashboard" className="font-medium text-indigo-600">
-          ← Dashboard
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/dashboard" className="font-medium text-indigo-600 transition hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
+            ← Dashboard
+          </Link>
+          <ThemeToggle />
+        </div>
 
         <h1 className="mt-5 text-3xl font-bold">Manage resources</h1>
 
         {typeof query.notice === "string" && (
           <p
             role="status"
-            className="mt-5 rounded-xl bg-indigo-50 p-4 text-indigo-800"
+            className="mt-5 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-indigo-800 dark:border-indigo-900/60 dark:bg-indigo-950/60 dark:text-indigo-300"
           >
             {query.notice.slice(0, 200)}
           </p>
@@ -147,7 +151,7 @@ export default async function AdminResourcesPage({ searchParams }: Props) {
             <article key={resource.id} className="rh-card">
               <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                 <h3 className="text-lg font-semibold">{resource.name}</h3>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-sm">
+                <span className="rounded-full bg-slate-100 px-3 py-1 text-sm dark:bg-slate-800 dark:text-slate-300">
                   {resource.isActive ? "Active" : "Inactive"}
                 </span>
               </div>

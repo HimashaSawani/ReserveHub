@@ -22,7 +22,7 @@ export default function BookingForm({
     <form action={action} className="mt-5 space-y-4">
       <input type="hidden" name="resourceId" value={resourceId} />
 
-      <p className="rounded-xl bg-indigo-50 p-3 text-sm text-indigo-800">
+      <p className="rounded-xl border border-indigo-200 bg-indigo-50 p-3 text-sm text-indigo-800 dark:border-indigo-900/60 dark:bg-indigo-950/60 dark:text-indigo-300">
         All times are in Sri Lanka time — Asia/Colombo.
       </p>
 
@@ -74,7 +74,7 @@ export default function BookingForm({
       </div>
 
       {state.error && (
-        <p role="alert" className="rounded-xl bg-red-50 p-3 text-red-700">
+        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/60 dark:text-red-300">
           {state.error}
         </p>
       )}

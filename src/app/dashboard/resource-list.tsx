@@ -45,17 +45,17 @@ export default function ResourceList({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Explore resources</h2>
-          <p className="mt-1 text-slate-600">
+          <p className="mt-1 text-slate-600 dark:text-slate-400">
             Find a room or shared equipment for your next activity.
           </p>
         </div>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-slate-500 dark:text-slate-400">
           {filteredResources.length} resource
           {filteredResources.length === 1 ? "" : "s"}
         </p>
       </div>
 
-      <div className="mt-5 grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-[1fr_220px]">
+      <div className="mt-5 grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:grid-cols-[1fr_220px] dark:border-slate-800 dark:bg-slate-900">
         <div>
           <label
             htmlFor="resource-search"
@@ -69,7 +69,7 @@ export default function ResourceList({
             value={search}
             onChange={(event) => setSearch(event.target.value)}
             placeholder="Search by name, location, or description"
-            className="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-indigo-950"
           />
         </div>
 
@@ -84,7 +84,7 @@ export default function ResourceList({
             id="resource-type"
             value={type}
             onChange={(event) => setType(event.target.value)}
-            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 dark:focus:ring-indigo-950"
           >
             <option value="ALL">All types</option>
             <option value="MEETING_ROOM">Meeting rooms</option>
@@ -95,9 +95,9 @@ export default function ResourceList({
       </div>
 
       {filteredResources.length === 0 ? (
-        <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
+        <div className="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center dark:border-slate-700 dark:bg-slate-900">
           <h3 className="font-semibold">No resources found</h3>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             Try another search or resource type.
           </p>
           <button
@@ -106,7 +106,7 @@ export default function ResourceList({
               setSearch("");
               setType("ALL");
             }}
-            className="mt-4 font-medium text-indigo-600 hover:text-indigo-800"
+            className="mt-4 font-medium text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300"
           >
             Clear filters
           </button>
@@ -116,25 +116,25 @@ export default function ResourceList({
           {filteredResources.map((resource) => (
             <article
               key={resource.id}
-              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-colors dark:border-slate-800 dark:bg-slate-900"
             >
-              <span className="inline-flex rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
+              <span className="inline-flex rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 dark:bg-indigo-950/70 dark:text-indigo-300">
                 {typeLabels[resource.type]}
               </span>
 
               <h3 className="mt-4 text-xl font-bold">{resource.name}</h3>
 
-              <p className="mt-2 text-sm font-medium text-slate-600">
+              <p className="mt-2 text-sm font-medium text-slate-600 dark:text-slate-400">
                 {resource.location}
               </p>
 
               {resource.capacity !== null && (
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                   Capacity: {resource.capacity} people
                 </p>
               )}
 
-              <p className="mt-4 text-sm leading-6 text-slate-600">
+              <p className="mt-4 text-sm leading-6 text-slate-600 dark:text-slate-400">
                 {resource.description || "No description provided."}
               </p>
 

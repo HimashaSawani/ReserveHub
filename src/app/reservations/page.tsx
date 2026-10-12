@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/current-user";
 import { formatColombo } from "@/lib/time";
 import SubmitButton from "@/components/submit-button";
+import ThemeToggle from "@/components/theme-toggle";
 import { cancelReservation } from "./actions";
 
 type Props = {
@@ -46,21 +47,24 @@ export default async function ReservationsPage({ searchParams }: Props) {
   const now = new Date();
 
   return (
-    <main className="min-h-screen bg-slate-100 p-4 text-slate-900 sm:p-6">
+    <main className="min-h-screen bg-slate-100 p-4 text-slate-900 transition-colors sm:p-6 dark:bg-slate-950 dark:text-slate-100">
       <div className="mx-auto max-w-5xl">
-        <Link href="/dashboard" className="font-medium text-indigo-600">
-          ← Dashboard
-        </Link>
+        <div className="flex items-center justify-between">
+          <Link href="/dashboard" className="font-medium text-indigo-600 transition hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300">
+            ← Dashboard
+          </Link>
+          <ThemeToggle />
+        </div>
 
         <h1 className="mt-5 text-3xl font-bold">My reservations</h1>
-        <p className="mt-2 text-slate-600">
+        <p className="mt-2 text-slate-600 dark:text-slate-400">
           All times are shown in Sri Lanka time.
         </p>
 
         {typeof query.notice === "string" && (
           <p
             role="status"
-            className="mt-5 rounded-xl bg-indigo-50 p-4 text-indigo-800"
+            className="mt-5 rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-indigo-800 dark:border-indigo-900/60 dark:bg-indigo-950/60 dark:text-indigo-300"
           >
             {query.notice.slice(0, 200)}
           </p>
@@ -96,26 +100,26 @@ export default async function ReservationsPage({ searchParams }: Props) {
                   <div>
                     <Link
                       href={`/resources/${reservation.resourceId}`}
-                      className="text-xl font-semibold text-indigo-700"
+                      className="text-xl font-semibold text-indigo-700 transition hover:underline dark:text-indigo-400"
                     >
                       {reservation.resource.name}
                     </Link>
-                    <p className="mt-1 text-sm text-slate-600">
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
                       {reservation.resource.location}
                     </p>
                   </div>
 
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium">
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium dark:bg-slate-800 dark:text-slate-300">
                     {label}
                   </span>
                 </div>
 
-                <p className="mt-4">
+                <p className="mt-4 font-medium">
                   {formatColombo(reservation.startAt)} →{" "}
                   {formatColombo(reservation.endAt)}
                 </p>
 
-                <p className="mt-2 break-words text-slate-600">
+                <p className="mt-2 break-words text-slate-600 dark:text-slate-400">
                   {reservation.purpose}
                 </p>
 
@@ -136,13 +140,13 @@ export default async function ReservationsPage({ searchParams }: Props) {
 
         <nav aria-label="Pagination" className="mt-6 flex items-center gap-4">
           {page > 1 && (
-            <Link href={`/reservations?page=${page - 1}`}>
+            <Link href={`/reservations?page=${page - 1}`} className="font-medium text-indigo-600 hover:underline dark:text-indigo-400">
               ← Previous
             </Link>
           )}
-          <span className="text-sm text-slate-600">Page {page}</span>
+          <span className="text-sm text-slate-600 dark:text-slate-400">Page {page}</span>
           {page * pageSize < total && (
-            <Link href={`/reservations?page=${page + 1}`}>
+            <Link href={`/reservations?page=${page + 1}`} className="font-medium text-indigo-600 hover:underline dark:text-indigo-400">
               Next →
             </Link>
           )}
