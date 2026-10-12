@@ -15,15 +15,25 @@ async function main() {
     },
     {
       email: "member@reservehub.local",
-      name: "Demo Member",
+      name: "Nadeesha Perera",
       role: Role.MEMBER,
+    },
+    {
+      email: "nadeesha@reservehub.lk",
+      name: "Nadeesha Perera",
+      role: Role.MEMBER,
+    },
+    {
+      email: "admin@demo.lk",
+      name: "ReserveHub Admin",
+      role: Role.ADMIN,
     },
   ];
 
   for (const user of users) {
     await prisma.user.upsert({
       where: { email: user.email },
-      update: {},
+      update: { name: user.name, role: user.role },
       create: {
         ...user,
         passwordHash,
@@ -34,42 +44,64 @@ async function main() {
   const resources = [
     {
       id: "00000000-0000-4000-8000-000000000001",
-      name: "Conference Room A",
+      name: "Iris Boardroom",
       type: ResourceType.MEETING_ROOM,
-      location: "First Floor",
+      location: "Level 3 · Colombo HQ",
       capacity: 12,
-      description: "Meeting room with a display and whiteboard.",
+      description: "Glass-walled boardroom with Meet setup, whiteboard and lake view.",
     },
     {
       id: "00000000-0000-4000-8000-000000000002",
-      name: "Meeting Room B",
+      name: "Drum Studio Pod",
       type: ResourceType.MEETING_ROOM,
-      location: "Second Floor",
-      capacity: 6,
-      description: "Quiet room for smaller team meetings.",
+      location: "Level 1 · Kandy Branch",
+      capacity: 4,
+      description: "Quiet pod for interviews and 1:1s. Acoustic panels, 55-inch display.",
     },
     {
       id: "00000000-0000-4000-8000-000000000003",
-      name: "Portable Projector",
+      name: "Sony A7IV Kit",
       type: ResourceType.EQUIPMENT,
-      location: "IT Office",
-      capacity: null,
-      description: "Shared projector for presentations.",
+      location: "Media cage · Colombo HQ",
+      capacity: 1,
+      description: "Mirrorless kit with 24-70mm, 2 batteries and tripod. Pickup at reception.",
     },
     {
       id: "00000000-0000-4000-8000-000000000004",
-      name: "Training Room",
+      name: "Projector Epson X49",
+      type: ResourceType.EQUIPMENT,
+      location: "Store B · Galle Fort",
+      capacity: 3,
+      description: "4,000-lumen projector with HDMI + clicker. Great for workshops.",
+    },
+    {
+      id: "00000000-0000-4000-8000-000000000005",
+      name: "Rooftop Pavilion",
+      type: ResourceType.OTHER,
+      location: "Rooftop · Colombo HQ",
+      capacity: 40,
+      description: "Open-air pavilion for town halls and evening socials. Weather cover included.",
+    },
+    {
+      id: "00000000-0000-4000-8000-000000000006",
+      name: "Focus Booth 07",
       type: ResourceType.MEETING_ROOM,
-      location: "Ground Floor",
-      capacity: 25,
-      description: "Room for workshops and training sessions.",
+      location: "Level 2 · Colombo HQ",
+      capacity: 1,
+      description: "Single soundproof booth for deep work and calls. Book up to 4 hours.",
     },
   ];
 
   for (const resource of resources) {
     await prisma.resource.upsert({
       where: { id: resource.id },
-      update: {},
+      update: {
+        name: resource.name,
+        type: resource.type,
+        location: resource.location,
+        capacity: resource.capacity,
+        description: resource.description,
+      },
       create: resource,
     });
   }

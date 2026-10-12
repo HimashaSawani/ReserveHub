@@ -26,7 +26,16 @@ export function colomboToday(): string {
     .slice(0, 10);
 }
 
-export function formatColombo(date: Date): string {
+export function formatColombo(
+  date: Date,
+  options?: Intl.DateTimeFormatOptions,
+): string {
+  if (options) {
+    return new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Colombo",
+      ...options,
+    }).format(date);
+  }
   return new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Colombo",
     dateStyle: "medium",
