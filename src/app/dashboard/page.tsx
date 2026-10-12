@@ -1,9 +1,8 @@
-import Link from "next/link";
-import { signOut } from "@/auth";
 import { requireUser } from "@/lib/current-user";
 import { prisma } from "@/lib/prisma";
-import ThemeToggle from "@/components/theme-toggle";
+import Navbar from "@/components/navbar";
 import ResourceList from "./resource-list";
+import { Shield } from "lucide-react";
 
 export default async function DashboardPage() {
   const user = await requireUser();
@@ -26,62 +25,33 @@ export default async function DashboardPage() {
   });
 
   return (
-    <main className="min-h-screen bg-slate-100 px-4 py-6 text-slate-900 transition-colors sm:px-6 dark:bg-slate-950 dark:text-slate-100">
-      <div className="mx-auto max-w-6xl">
-        <header className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div>
-            <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">ReserveHub</p>
-            <h1 className="mt-1 text-2xl font-bold">
-              Welcome, {user.name}
-            </h1>
-            <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              Signed in as {user.role.toLowerCase()}
-            </p>
+    <div className="min-h-screen bg-[#f8f7f2] text-slate-900 transition-colors dark:bg-[#061916] dark:text-slate-100">
+      <Navbar user={user} currentPath="dashboard" />
+
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        {/* Administrator Banner if user is ADMIN */}
+        {user.role === "ADMIN" && (
+          <div className="mb-6 flex items-center justify-end">
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-semibold text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">
+              <Shield className="h-3.5 w-3.5 text-amber-600 dark:text-amber-400" />
+              <span>Viewing as Administrator — Manage resources enabled</span>
+            </div>
           </div>
+        )}
 
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            <form
-              action={async () => {
-                "use server";
-                await signOut({ redirectTo: "/login" });
-              }}
-            >
-              <button
-                type="submit"
-                className="rounded-xl border border-slate-300 px-4 py-2 font-medium transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
-              >
-                Sign out
-              </button>
-            </form>
-          </div>
-        </header>
+        {/* Page Title & Subtitle */}
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+            Find a space or gear
+          </h1>
+          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            {resources.length} active resources · Availability depends on the time you pick
+          </p>
+        </div>
 
-        <nav
-          aria-label="Main navigation"
-          className="mt-6 flex flex-wrap gap-3"
-        >
-          <Link href="/dashboard" className="rh-button">
-            Resources
-          </Link>
-          <Link
-            href="/reservations"
-            className="rounded-xl border border-slate-300 bg-white px-4 py-3 font-medium transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
-          >
-            My reservations
-          </Link>
-          {user.role === "ADMIN" && (
-            <Link
-              href="/admin/resources"
-              className="rounded-xl border border-slate-300 bg-white px-4 py-3 font-medium transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
-            >
-              Manage resources
-            </Link>
-          )}
-        </nav>
-
+        {/* Resource List Component */}
         <ResourceList resources={resources} />
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
