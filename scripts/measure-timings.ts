@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { performance } from "node:perf_hooks";
 import { PrismaClient } from "@prisma/client";
-import { compare, hash } from "bcryptjs";
+import { compare } from "bcryptjs";
 
 const prisma = new PrismaClient();
 

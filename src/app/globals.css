@@ -87,7 +87,7 @@ h3, .rh-resource-name {
   height: 2.5rem; /* 40px */
   padding: 0 1rem;
   border-radius: 0.75rem;
-  background: #0a3832;
+  background: #0f766e;
   color: #ffffff;
   font-weight: 500;
   font-size: 0.875rem; /* 14px */
@@ -96,7 +96,7 @@ h3, .rh-resource-name {
 }
 
 .rh-button:hover {
-  background: #0d463e;
+  background: #115e59;
 }
 
 .rh-button:disabled {
@@ -114,11 +114,11 @@ h3, .rh-resource-name {
 }
 
 .dark .rh-button {
-  background: #0f4b43;
+  background: #0d9488;
 }
 
 .dark .rh-button:hover {
-  background: #145e54;
+  background: #14b8a6;
 }
 
 .dark .rh-button-amber {
