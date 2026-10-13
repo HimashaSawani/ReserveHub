@@ -19,6 +19,7 @@ A resource reservation application for managing shared rooms and equipment.
 - Reservation creation
 - Database-enforced prevention of overlapping bookings
 - Personal reservation history and cancellation
+- Administrator "All reservations" overview with member, date, and status filters
 - Administrator resource creation, editing, activation, and deactivation
 - Responsive interface
 
@@ -97,6 +98,8 @@ npx tsc --noEmit
 npx eslint .
 npm run build
 npm run test:booking
+npx tsx scripts/verify-admin-reservations.ts
+npx tsx scripts/test-permissions-and-performance.ts
 ```
 
 The booking verification script checks simultaneous requests, back-to-back bookings, cancellation and rebooking, invalid times, and inactive resources using a temporary resource. Run database verification against the local development database.
