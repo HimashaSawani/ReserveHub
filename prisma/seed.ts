@@ -88,7 +88,7 @@ async function main() {
       type: ResourceType.MEETING_ROOM,
       location: "Level 2 · Colombo HQ",
       capacity: 1,
-      description: "Single soundproof booth for deep work and calls. Book up to 4 hours.",
+      description: "Single soundproof booth for focused work, calls, and virtual meetings.",
     },
   ];
 
