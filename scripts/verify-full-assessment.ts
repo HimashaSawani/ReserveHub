@@ -87,7 +87,7 @@ async function runAssessmentAudit() {
   const leaksHash = dashHtml.includes("$2a$") || dashHtml.includes("$2b$") || dashHtml.includes("passwordHash");
   console.log(`- Password hash never appears in HTML responses: ${!leaksHash ? "PASS" : "FAIL"}`);
 
-  // SECTION 2: ACCESS CONTROL & MULTI-TENANT ISOLATION
+  // SECTION 2: ACCESS CONTROL & CROSS-USER ACCESS PROTECTION
   console.log("\n--- 2. Access Control & Authorization Audit ---");
   const checkMemberAdminPages1 = await fetch(`${BASE_URL}/admin/resources`, {
     headers: { Cookie: memberAuth.cookieHeader },
@@ -127,7 +127,7 @@ async function runAssessmentAudit() {
     endAt: d1End,
     purpose: "Initial Team Booking",
   });
-  console.log(`- Valid future reservation created: PASS (ID: ${b1.id})`);
+  console.log(`- Valid future reservation created: PASS (ID: ${b1})`);
 
   // Same slot conflict
   let blockedSameSlot = false;
@@ -167,7 +167,7 @@ async function runAssessmentAudit() {
     endAt: parseColomboDateTime("2026-11-05T12:00")!,
     purpose: "Adjacent booking",
   });
-  console.log(`- Back-to-back adjacent slot succeeded: PASS (ID: ${bAdjacent.id})`);
+  console.log(`- Back-to-back adjacent slot succeeded: PASS (ID: ${bAdjacent})`);
 
   // Concurrent collision simulation (Promise.all)
   const concurrentStart = parseColomboDateTime("2026-11-05T14:00")!;
