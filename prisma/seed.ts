@@ -15,7 +15,7 @@ async function main() {
     },
     {
       email: "member@reservehub.local",
-      name: "Nadeesha Perera",
+      name: "Kasun Fernando",
       role: Role.MEMBER,
     },
     {

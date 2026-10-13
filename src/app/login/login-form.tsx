@@ -123,7 +123,15 @@ export default function LoginForm() {
             onClick={() => fillCredentials("member@reservehub.local")}
             className="text-[#0a3832] dark:text-emerald-400 font-medium hover:underline"
           >
-            member
+            member 1
+          </button>
+          <span>/</span>
+          <button
+            type="button"
+            onClick={() => fillCredentials("nadeesha@reservehub.lk")}
+            className="text-[#0a3832] dark:text-emerald-400 font-medium hover:underline"
+          >
+            member 2
           </button>
           <span>/</span>
           <button

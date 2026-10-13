@@ -93,7 +93,7 @@ export default function Navbar({ user, currentPath }: NavbarProps) {
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="hidden sm:flex flex-col text-right leading-tight">
             <span className="text-sm font-medium text-white">
-              {user.name || "Nadeesha Perera"}
+              {user.name || "Member"}
             </span>
             <span className="text-[12px] text-emerald-200/80">
               {roleLabel}
