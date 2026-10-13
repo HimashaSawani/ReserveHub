@@ -27,7 +27,7 @@ function SaveButton({ isEditing }: { isEditing: boolean }) {
     <button
       type="submit"
       disabled={pending}
-      className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0a3832] text-sm font-medium text-white shadow-sm transition hover:bg-[#0d463e] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#0e4840]"
+      className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0f766e] text-sm font-medium text-white shadow-sm transition hover:bg-[#115e59] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#0d9488] dark:hover:bg-[#14b8a6]"
     >
       {pending ? (
         <>
@@ -84,7 +84,7 @@ export default function AdminClient({ resources, notice }: AdminClientProps) {
         <button
           type="button"
           onClick={() => setSelectedResource(null)}
-          className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-[#0a3832] px-4 text-sm font-medium text-white shadow-sm transition hover:bg-[#0d463e] dark:bg-[#0e4840]"
+          className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-[#0f766e] px-4 text-sm font-medium text-white shadow-sm transition hover:bg-[#115e59] dark:bg-[#0d9488] dark:hover:bg-[#14b8a6]"
         >
           <Plus className="h-4 w-4" />
           <span>New resource</span>
@@ -218,7 +218,7 @@ export default function AdminClient({ resources, notice }: AdminClientProps) {
                               ? "Equipment"
                               : "Other"}{" "}
                           · {res.location}{" "}
-                          {res.capacity !== null ? `· ${res.capacity} people` : ""}
+                          {res.capacity !== null ? `· ${res.capacity === 1 ? "1 person" : `${res.capacity} people`}` : ""}
                         </p>
                       </div>
                     </div>

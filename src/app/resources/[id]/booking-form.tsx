@@ -114,7 +114,7 @@ export default function BookingForm({
             <button
               type="submit"
               disabled={pending}
-              className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0a3832] text-sm font-medium text-white shadow-sm transition hover:bg-[#0d463e] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#0e4840] dark:hover:bg-[#12584e]"
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0f766e] text-sm font-medium text-white shadow-sm transition hover:bg-[#115e59] disabled:cursor-not-allowed disabled:opacity-50 dark:bg-[#0d9488] dark:hover:bg-[#14b8a6]"
             >
               {pending ? (
                 <>

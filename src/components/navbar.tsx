@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/theme-toggle";
 import SignOutButton from "@/components/sign-out-button";
+import BrandLogo from "@/components/brand-logo";
 
 interface NavbarProps {
   user: {
@@ -25,13 +26,11 @@ export default function Navbar({ user, currentPath }: NavbarProps) {
   const roleLabel = user.role === "ADMIN" ? "Administrator" : "Member";
 
   return (
-    <header className="sticky top-0 z-40 h-16 bg-[#0a3832] text-white shadow-md transition-colors dark:bg-[#07241f] border-b border-[#0d463e] dark:border-[#0f342e]">
-      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4 sm:px-6">
-        {/* Left: Brand Logo & Title */}
+    <header className="sticky top-0 z-40 bg-[#0a3832] text-white shadow-md transition-colors dark:bg-[#07241f] border-b border-[#0d463e] dark:border-[#0f342e]">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+        {/* Left: Custom SVG Brand Logo & Title */}
         <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500 font-bold text-slate-950 text-lg shadow-sm transition group-hover:scale-105">
-            R
-          </div>
+          <BrandLogo className="h-9 w-9 shrink-0 transition group-hover:scale-105" />
           <div className="flex flex-col">
             <span className="text-[15px] font-semibold tracking-tight text-white leading-tight">
               ReserveHub
@@ -42,7 +41,7 @@ export default function Navbar({ user, currentPath }: NavbarProps) {
           </div>
         </Link>
 
-        {/* Center: Navigation Tabs */}
+        {/* Center: Navigation Tabs (Desktop) */}
         <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-1.5">
           <Link
             href="/dashboard"
@@ -112,6 +111,54 @@ export default function Navbar({ user, currentPath }: NavbarProps) {
 
           <SignOutButton />
         </div>
+      </div>
+
+      {/* Mobile Navigation Tabs */}
+      <div className="flex md:hidden border-t border-emerald-900/40 px-4 py-2 gap-1.5 overflow-x-auto whitespace-nowrap bg-[#082f2a]">
+        <Link
+          href="/dashboard"
+          className={
+            currentPath === "dashboard" || currentPath === "resources"
+              ? "rounded-full bg-white px-3 py-1 text-xs font-medium text-[#0a3832]"
+              : "rounded-full px-3 py-1 text-xs text-emerald-100/90 hover:text-white"
+          }
+        >
+          Resources
+        </Link>
+        <Link
+          href="/reservations"
+          className={
+            currentPath === "reservations"
+              ? "rounded-full bg-white px-3 py-1 text-xs font-medium text-[#0a3832]"
+              : "rounded-full px-3 py-1 text-xs text-emerald-100/90 hover:text-white"
+          }
+        >
+          My reservations
+        </Link>
+        {user.role === "ADMIN" && (
+          <>
+            <Link
+              href="/admin/resources"
+              className={
+                currentPath === "admin"
+                  ? "rounded-full bg-white px-3 py-1 text-xs font-medium text-[#0a3832]"
+                  : "rounded-full px-3 py-1 text-xs text-emerald-100/90 hover:text-white"
+              }
+            >
+              Manage resources
+            </Link>
+            <Link
+              href="/admin/reservations"
+              className={
+                currentPath === "admin-reservations"
+                  ? "rounded-full bg-white px-3 py-1 text-xs font-medium text-[#0a3832]"
+                  : "rounded-full px-3 py-1 text-xs text-emerald-100/90 hover:text-white"
+              }
+            >
+              All reservations
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );

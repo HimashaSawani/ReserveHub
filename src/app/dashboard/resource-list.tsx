@@ -126,7 +126,7 @@ export default function ResourceList({
               setSearch("");
               setType("ALL");
             }}
-            className="mt-5 inline-flex items-center justify-center rounded-xl bg-[#0a3832] px-4 py-2 text-sm font-medium text-white hover:bg-[#0d463e]"
+            className="mt-5 inline-flex items-center justify-center rounded-xl bg-[#0f766e] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#115e59] dark:bg-[#0d9488] dark:hover:bg-[#14b8a6]"
           >
             Reset filters
           </button>
@@ -197,7 +197,9 @@ export default function ResourceList({
                         <Users className="h-3.5 w-3.5 shrink-0 text-slate-500" />
                         <span>
                           {resource.capacity !== null
-                            ? `${resource.capacity} people`
+                            ? resource.capacity === 1
+                              ? "1 person"
+                              : `${resource.capacity} people`
                             : isEquipment
                               ? "Exclusive gear reservation"
                               : "General resource"}
@@ -217,7 +219,7 @@ export default function ResourceList({
                   <div className="mt-5 pt-3">
                     <Link
                       href={`/resources/${resource.id}`}
-                      className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0a3832] text-sm font-medium text-white transition hover:bg-[#0d463e] dark:bg-[#0e4840] dark:hover:bg-[#12584e]"
+                      className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0f766e] text-sm font-medium text-white transition hover:bg-[#115e59] dark:bg-[#0d9488] dark:hover:bg-[#14b8a6]"
                     >
                       <span>View schedule &amp; reserve</span>
                       <ArrowRight className="h-4 w-4" />
