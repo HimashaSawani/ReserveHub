@@ -8,6 +8,8 @@ type Props = {
   searchParams?: Promise<{ preview?: string }>;
 };
 
+import BrandLogo from "@/components/brand-logo";
+
 export default async function LoginPage({ searchParams }: Props) {
   const query = searchParams ? await searchParams : {};
   const session = await auth();
@@ -27,9 +29,7 @@ export default async function LoginPage({ searchParams }: Props) {
         {/* Top: Logo & Sri Lanka Time pill */}
         <div>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500 font-black text-slate-950 text-2xl shadow-sm">
-              R
-            </div>
+            <BrandLogo className="h-10 w-10 shrink-0 shadow-sm" />
             <span className="text-xl font-bold tracking-tight text-white">
               ReserveHub
             </span>

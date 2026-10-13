@@ -102,7 +102,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0a3832] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#0d463e] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#0e4840] dark:hover:bg-[#12584e]"
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0f766e] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#115e59] disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#0d9488] dark:hover:bg-[#14b8a6]"
       >
         {pending ? (
           <>

@@ -180,7 +180,7 @@ export default async function ResourcePage({
                 {resource.capacity !== null && (
                   <div className="flex items-center gap-1.5">
                     <Users className="h-4 w-4 text-slate-500" />
-                    <span>{resource.capacity} people</span>
+                    <span>{resource.capacity === 1 ? "1 person" : `${resource.capacity} people`}</span>
                   </div>
                 )}
               </div>
