@@ -1,22 +1,11 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import ThemeToggle from "@/components/theme-toggle";
 import LoginForm from "./login-form";
 import { Clock } from "lucide-react";
-
-type Props = {
-  searchParams?: Promise<{ preview?: string }>;
-};
-
 import BrandLogo from "@/components/brand-logo";
 
-export default async function LoginPage({ searchParams }: Props) {
-  const query = searchParams ? await searchParams : {};
+export default async function LoginPage() {
   const session = await auth();
-
-  if (session?.user?.id && query.preview !== "1") {
-    redirect("/dashboard");
-  }
 
   return (
     <main className="flex min-h-screen flex-col lg:flex-row bg-[#f8f7f2] text-slate-900 transition-colors dark:bg-[#061916] dark:text-slate-100">
@@ -84,6 +73,21 @@ export default async function LoginPage({ searchParams }: Props) {
               Sign in to open your resource dashboard.
             </p>
           </div>
+
+          {session?.user?.name && (
+            <div className="mb-4 flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50/80 p-3.5 text-xs text-emerald-900 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200">
+              <div>
+                <span className="font-semibold block">Currently signed in:</span>
+                <span>{session.user.name}</span>
+              </div>
+              <a
+                href="/dashboard"
+                className="font-medium text-emerald-700 underline hover:text-emerald-900 dark:text-emerald-300 shrink-0 ml-2"
+              >
+                Dashboard →
+              </a>
+            </div>
+          )}
 
           <div className="rounded-3xl border border-[#e5e3da] bg-white p-7 sm:p-9 shadow-sm transition dark:border-[#183e37] dark:bg-[#0a2520]">
             <LoginForm />

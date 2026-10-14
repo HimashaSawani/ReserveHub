@@ -5,7 +5,8 @@ import { hash } from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  const passwordHash = await hash("ReserveHub123!", 12);
+  const seedPassword = process.env.SEED_PASSWORD || "ReserveHub123!";
+  const passwordHash = await hash(seedPassword, 12);
 
   const users = [
     {

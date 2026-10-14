@@ -12,9 +12,13 @@ const initialState: BookingState = { error: "" };
 export default function BookingForm({
   resourceId,
   isActive = true,
+  userName,
+  userEmail,
 }: {
   resourceId: string;
   isActive?: boolean;
+  userName?: string | null;
+  userEmail?: string | null;
 }) {
   const [state, action, pending] = useActionState(
     createReservation,
@@ -28,6 +32,16 @@ export default function BookingForm({
         <h2 className="text-xl font-semibold tracking-tight text-[#0a3832] dark:text-emerald-300">
           Reserve this resource
         </h2>
+
+        {userName && (
+          <div className="mt-2.5 flex items-center gap-2 rounded-xl border border-emerald-200/80 bg-emerald-50/70 px-3 py-1.5 text-xs text-emerald-900 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-200">
+            <span className="h-2 w-2 rounded-full bg-emerald-600 dark:bg-emerald-400 shrink-0" />
+            <span>
+              Booking as <strong>{userName}</strong>
+              {userEmail && <span className="opacity-80"> ({userEmail})</span>}
+            </span>
+          </div>
+        )}
 
         {!isActive ? (
           <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">

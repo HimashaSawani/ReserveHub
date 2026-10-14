@@ -3,15 +3,15 @@ services:
     image: postgres:17
     restart: unless-stopped
     environment:
-      POSTGRES_USER: reservehub
-      POSTGRES_PASSWORD: reservehub_dev
-      POSTGRES_DB: reservehub
+      POSTGRES_USER: ${POSTGRES_USER:-reservehub}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-reservehub_dev}
+      POSTGRES_DB: ${POSTGRES_DB:-reservehub}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - reservehub_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U reservehub -d reservehub"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-reservehub} -d ${POSTGRES_DB:-reservehub}"]
       interval: 5s
       timeout: 5s
       retries: 10

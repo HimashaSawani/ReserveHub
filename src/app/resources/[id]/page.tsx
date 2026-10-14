@@ -285,7 +285,12 @@ export default async function ResourcePage({
           </div>
 
           {/* Right Column: Reserve Form */}
-          <BookingForm resourceId={resource.id} isActive={resource.isActive} />
+          <BookingForm
+            resourceId={resource.id}
+            isActive={resource.isActive}
+            userName={user.name}
+            userEmail={user.email}
+          />
         </div>
       </main>
     </div>

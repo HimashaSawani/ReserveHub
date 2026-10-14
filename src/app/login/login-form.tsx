@@ -2,11 +2,9 @@
 
 import { useState, type FormEvent } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 
 export default function LoginForm() {
-  const router = useRouter();
   const [email, setEmail] = useState("nadeesha@reservehub.lk");
   const [password, setPassword] = useState("ReserveHub123!");
   const [showPassword, setShowPassword] = useState(false);
@@ -30,8 +28,9 @@ export default function LoginForm() {
         return;
       }
 
-      router.replace("/dashboard");
-      router.refresh();
+      // Use full page reload to clear router cache during account switch
+      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+      window.location.href = "/dashboard";
     } catch {
       setError("Cannot reach the server. Your details are saved locally. Retry when online.");
     } finally {

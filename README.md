@@ -55,12 +55,13 @@ Open http://localhost:3000.
 
 ## Local demo accounts
 
-| Role | Email | Password |
-|---|---|---|
-| Admin | admin@reservehub.local | ReserveHub123! |
-| Member | member@reservehub.local | ReserveHub123! |
+| Role | Name | Email | Default Password |
+|---|---|---|---|
+| Admin | ReserveHub Admin | admin@reservehub.local | ReserveHub123! |
+| Member 1 | Kasun Fernando | member@reservehub.local | ReserveHub123! |
+| Member 2 | Nadeesha Perera | nadeesha@reservehub.lk | ReserveHub123! |
 
-These accounts and credentials are for local demonstration.
+These accounts and credentials are for local demonstration only. The seed password can be customized via the `SEED_PASSWORD` environment variable before running `npm run db:seed`. The login screen also provides quick-fill demo buttons to switch between accounts with a single click.
 
 ## Engineering decisions
 
@@ -99,10 +100,9 @@ npx eslint .
 npm run build
 npm run test:booking
 npx tsx scripts/verify-admin-reservations.ts
-npx tsx scripts/test-permissions-and-performance.ts
 ```
 
-The booking verification script checks simultaneous requests, back-to-back bookings, cancellation and rebooking, invalid times, and inactive resources using a temporary resource. Run database verification against the local development database.
+The booking verification script checks simultaneous requests, back-to-back bookings, cancellation and rebooking, invalid times, and inactive resources using a temporary resource.
 
 ## Database diagram
 
