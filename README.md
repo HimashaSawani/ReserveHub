@@ -128,7 +128,7 @@ erDiagram
         string location "Physical location / room identifier"
         int capacity "Positive integer capacity (optional)"
         string description "Resource details & amenities (optional)"
-        boolean isActive "Active status flag (soft-delete)"
+        boolean isActive "Active status flag"
         timestamptz createdAt "Creation timestamp"
         timestamptz updatedAt "Update timestamp"
     }
@@ -148,12 +148,12 @@ erDiagram
 
 ### Constraints & Concurrency Architecture
 
-- **PostgreSQL Exclusion Lock (`btree_gist`)**: Confirmed reservations for the same resource cannot overlap. Enforced at the database engine level via `EXCLUDE USING gist ("resourceId" WITH =, tstzrange("startAt", "endAt", '[)') WITH &&) WHERE ("status" = 'CONFIRMED')`.
+- **PostgreSQL Exclusion Constraint (`btree_gist`)**: Confirmed reservations for the same resource cannot overlap. Enforced at the database engine level via `EXCLUDE USING gist ("resourceId" WITH =, tstzrange("startAt", "endAt", '[)') WITH &&) WHERE ("status" = 'CONFIRMED')`.
 - **Half-Open Intervals `[)`**: `[startAt, endAt)` allows back-to-back bookings (e.g. 09:00–10:00 and 10:00–11:00) with zero collision.
-- **Relational Integrity**: Foreign keys use `onDelete: Restrict` to preserve historical booking audit trails when users or resources exist.
+- **Relational Integrity**: Foreign keys use `onDelete: Restrict`. Prevents deletion of users or resources that have associated reservations.
 - **Valid Time Check**: Enforced via `CHECK ("endAt" > "startAt")`.
 - **Resource Capacity**: Enforced via `CHECK ("capacity" IS NULL OR "capacity" > 0)`.
-- **Soft Deactivation**: Resources are marked `isActive: false` rather than deleted, keeping existing commitments valid.
+- **Resource Deactivation**: Resources are marked `isActive: false` rather than deleted, keeping existing commitments valid while preventing new reservations.
 
 ## Scope and limitations
 
