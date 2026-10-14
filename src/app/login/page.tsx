@@ -51,11 +51,6 @@ export default async function LoginPage() {
             </div>
           </div>
         </div>
-
-        {/* Bottom: Note */}
-        <div className="text-xs text-emerald-200/60">
-          Member + Administrator access · Records survive restarts
-        </div>
       </section>
 
       {/* Right Column: Warm Cream Background with Login Form Card */}
