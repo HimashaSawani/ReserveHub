@@ -5,8 +5,8 @@ import { signIn } from "next-auth/react";
 import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("nadeesha@reservehub.lk");
-  const [password, setPassword] = useState("ReserveHub123!");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
@@ -143,7 +143,7 @@ export default function LoginForm() {
         </div>
         <button
           type="button"
-          onClick={() => alert("Password for demo accounts is ReserveHub123!")}
+          onClick={() => alert("Refer to README.md for local demo credentials or use the quick-fill buttons above.")}
           className="text-[#0a3832] dark:text-emerald-400 font-medium hover:underline"
         >
           Forgot password?

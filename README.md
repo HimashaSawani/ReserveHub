@@ -104,9 +104,56 @@ npx tsx scripts/verify-admin-reservations.ts
 
 The booking verification script checks simultaneous requests, back-to-back bookings, cancellation and rebooking, invalid times, and inactive resources using a temporary resource.
 
-## Database diagram
+## Database design & ER diagram
 
-See [ER diagram](docs/er-diagram.md).
+```mermaid
+erDiagram
+    USER ||--o{ RESERVATION : "creates (1:N)"
+    RESOURCE ||--o{ RESERVATION : "allocated_to (1:N)"
+
+    USER {
+        uuid id PK "Primary Key"
+        string name "User full name"
+        string email UK "Unique email address"
+        string passwordHash "Bcrypt password hash"
+        enum role "ADMIN | MEMBER"
+        timestamptz createdAt "Creation timestamp"
+        timestamptz updatedAt "Update timestamp"
+    }
+
+    RESOURCE {
+        uuid id PK "Primary Key"
+        string name "Resource name"
+        enum type "MEETING_ROOM | EQUIPMENT | OTHER"
+        string location "Physical location / room identifier"
+        int capacity "Positive integer capacity (optional)"
+        string description "Resource details & amenities (optional)"
+        boolean isActive "Active status flag (soft-delete)"
+        timestamptz createdAt "Creation timestamp"
+        timestamptz updatedAt "Update timestamp"
+    }
+
+    RESERVATION {
+        uuid id PK "Primary Key"
+        uuid userId FK "References User.id (onDelete: Restrict)"
+        uuid resourceId FK "References Resource.id (onDelete: Restrict)"
+        timestamptz startAt "Reservation start time"
+        timestamptz endAt "Reservation end time"
+        string purpose "Reservation purpose / meeting title"
+        enum status "CONFIRMED | CANCELLED"
+        timestamptz createdAt "Creation timestamp"
+        timestamptz updatedAt "Update timestamp"
+    }
+```
+
+### Constraints & Concurrency Architecture
+
+- **PostgreSQL Exclusion Lock (`btree_gist`)**: Confirmed reservations for the same resource cannot overlap. Enforced at the database engine level via `EXCLUDE USING gist ("resourceId" WITH =, tstzrange("startAt", "endAt", '[)') WITH &&) WHERE ("status" = 'CONFIRMED')`.
+- **Half-Open Intervals `[)`**: `[startAt, endAt)` allows back-to-back bookings (e.g. 09:00–10:00 and 10:00–11:00) with zero collision.
+- **Relational Integrity**: Foreign keys use `onDelete: Restrict` to preserve historical booking audit trails when users or resources exist.
+- **Valid Time Check**: Enforced via `CHECK ("endAt" > "startAt")`.
+- **Resource Capacity**: Enforced via `CHECK ("capacity" IS NULL OR "capacity" > 0)`.
+- **Soft Deactivation**: Resources are marked `isActive: false` rather than deleted, keeping existing commitments valid.
 
 ## Scope and limitations
 
